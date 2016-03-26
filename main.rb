@@ -50,12 +50,12 @@ def generate_non_tie(p1,p2,game)
   result
 end
 
-def we_have_a_winner(round, p1_name, p1_wins, p2_name, p2_wins, game)
+def we_have_a_winner(round, p1, p2, game)
   outcome = ''
-  if game.clinched_series(round, p1_wins, p2_wins) && (p1_wins > p2_wins)
-    outcome = "#{p1_name} wins the series!"
-  elsif game.clinched_series(round, p1_wins, p2_wins) && (p2_wins > p1_wins)
-    outcome = "#{p2_name} wins the series!"
+  if game.clinched_series && (p1.current_wins > p2.current_wins)
+    outcome = "#{p1.name} wins the series!"
+  elsif game.clinched_series && (p2.current_wins > p1.current_wins)
+    outcome = "#{p2.name} wins the series!"
   end
   outcome
 end
@@ -69,7 +69,7 @@ round = get_series_length
 game.set_player_1(p1)
 game.set_player_2(p2)
 
-while n <= round
+while n <= round && !game.clinched_series
   puts "\n\n#{game.player_1.name}(#{p1.current_wins}) vs #{game.player_2.name}(#{p2.current_wins})\nRound #{n} of #{round}\n"
   result = generate_non_tie(p1,p2, game)
   if result == 1
@@ -77,7 +77,5 @@ while n <= round
   elsif result == 2
     p2.increase_current_wins
   end
-  return we_have_a_winner(round, p1.name, p1.current_wins, p2.name, p2.current_wins, game) if game.clinched_series(round, p1.current_wins, p2.current_wins)
   n += 1
-  end
-binding.pry
+end

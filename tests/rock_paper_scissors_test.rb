@@ -111,7 +111,7 @@ class RockPaperScissorsTest < Minitest::Test
       game.player_2.current_wins = 5
 
       actual = game.clinched_series
-      assert_equal(2, actual, "'2' as an integer should be returned.")
+      assert_equal(true, actual, "'true' as an boolean should be returned.")
     end
 
     def test_winner_player_Ryan_beats_Don
@@ -125,7 +125,7 @@ class RockPaperScissorsTest < Minitest::Test
       game.player_2.current_wins = 2
 
       actual = game.clinched_series
-      assert_equal(1, actual, "'1' as an integer should be returned.")
+      assert_equal(true, actual, "'true' as an boolean should be returned.")
     end
 
     def test_report_winner_p1_paper_rock

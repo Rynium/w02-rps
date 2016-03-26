@@ -25,32 +25,28 @@ class Game
   #Determines which player wins the match.
   #Takes in two valid moves as strings
   #Returns a string drescribing the outcome of the match.
-  def return_winner(p1_move, p2_move)
+  def return_winner
     winner = ''
-      if p1_move.downcase == 'rock'     && p2_move.downcase == 'scissors' ||
-        p1_move.downcase == 'scissors' && p2_move.downcase == 'paper' ||
-        p1_move.downcase == 'paper'    && p2_move.downcase == 'rock'
+      if player_1.current_move.downcase == 'rock'     && player_2.current_move.downcase == 'scissors' ||
+        player_1.current_move.downcase == 'scissors'  && player_2.current_move.downcase == 'paper' ||
+        player_1.current_move.downcase == 'paper'     && player_2.current_move.downcase == 'rock'
         winner = 1
 
-      elsif p2_move.downcase == 'rock' && p1_move.downcase == 'scissors' ||
-        p2_move.downcase == 'scissors' && p1_move.downcase == 'paper' ||
-        p2_move.downcase == 'paper' && p1_move.downcase == 'rock'
+      elsif player_2.current_move.downcase == 'rock'  && player_1.current_move.downcase == 'scissors' ||
+        player_2.current_move.downcase == 'scissors'  && player_1.current_move.downcase == 'paper' ||
+        player_2.current_move.downcase == 'paper'     && player_1.current_move.downcase == 'rock'
         winner = 2
       else
         winner = 3
       end
   end
 
-  def report_winner(result, p1_name, p1_move, p2_name, p2_move, n)
+  def report_winner(result)
     report = ''
       if result == 1
-        report = "ROUND #{n}---#{p1_name}'s #{p1_move.upcase} beats #{p2_name}'s #{p2_move.upcase}"
-
+        report = "ROUND #{@current_round}---#{@player_1.name}'s #{@player_1.current_move.upcase} beats #{@player_2.name}'s #{@player_2.move.upcase}"
       elsif result == 2
-        report = "ROUND #{n}---#{p2_name}'s #{p2_move.upcase} beats #{p1_name}'s #{p1_move.upcase}"
-
-      else
-        report = "TIE...Let's reshoot"
+        report = "ROUND #{@current_round}---#{@player_2.name}'s #{@player_2.current_move.upcase} beats #{@player_1.name}'s #{@player_1.move.upcase}"
       end
   end
 
@@ -92,11 +88,11 @@ class Game
   end
 end
 
-def we_have_a_winner(game)
+def we_have_a_series_winner(game)
   outcome = ''
-  if game.clinched_series && @player_1.current_wins > @player_2.current_wins
+  if @player_1.current_wins > @player_2.current_wins
     outcome = "#{@player_1.name} wins the series!"
-  elsif game.clinched_series && (@player_2.current_wins > @player_1.current_wins)
+  elsif @player_2.current_wins > @player_1.current_wins
     outcome = "#{@player_2.name} wins the series!"
   end
   outcome

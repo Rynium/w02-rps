@@ -41,23 +41,12 @@ def current_moves(p1,p2,game)
   result
 end
 
-
 def generate_non_tie(p1,p2,game)
   result = current_moves(p1,p2,game)
   while result == 3
     result = current_moves(p1,p2,game)
   end
   result
-end
-
-def we_have_a_winner(round, p1, p2, game)
-  outcome = ''
-  if game.clinched_series && (p1.current_wins > p2.current_wins)
-    outcome = "#{p1.name} wins the series!"
-  elsif game.clinched_series && (p2.current_wins > p1.current_wins)
-    outcome = "#{p2.name} wins the series!"
-  end
-  outcome
 end
 
 print "\n\nWELCOME TO THE WORLD SERIES OF ROCK,PAPER,SCISSORS on ESPN 8 'THE OCHO'\n\n"
@@ -72,10 +61,7 @@ game.set_player_2(p2)
 while n <= round && !game.clinched_series
   puts "\n\n#{game.player_1.name}(#{p1.current_wins}) vs #{game.player_2.name}(#{p2.current_wins})\nRound #{n} of #{round}\n"
   result = generate_non_tie(p1,p2, game)
-  if result == 1
-    p1.increase_current_wins
-  elsif result == 2
-    p2.increase_current_wins
-  end
+
+
   n += 1
 end

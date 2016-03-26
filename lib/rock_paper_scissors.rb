@@ -1,8 +1,6 @@
 require 'pry'
 require_relative 'player.rb'
 
-
-
 class Game
   attr_accessor :current_round, :game_log, :player_1, :player_2, :series_length
 
@@ -41,7 +39,7 @@ class Game
       end
   end
 
-  def report_winner(result)
+  def report_round_winner(result)
     report = ''
       if result == 1
         report = "ROUND #{@current_round}---#{@player_1.name}'s #{@player_1.current_move.upcase} beats #{@player_2.name}'s #{@player_2.move.upcase}"
@@ -76,24 +74,17 @@ class Game
   #Checks to see if a player has clinched a series win.
   #Takes in 3 arguements - player_1.currnet_wins, player_2.currnet_wins, and series_length
   #Returns a string drescribing a player as a winner if player.current_wins > series_length/2
-  def clinched_series
+  def clinched_series?
     clinch_num = @series_length/2.0
-    winner = 0
-    if @player_1.current_wins > (clinch_num)
-      winner = 1
-    elsif @player_2.current_wins > (clinch_num)
-      winner = 2
-    end
-    winner
+    @player_1.current_wins > (clinch_num) || @player_2.current_wins > (clinch_num) ? winner = true : winner = false
   end
-end
 
-def we_have_a_series_winner(game)
-  outcome = ''
-  if @player_1.current_wins > @player_2.current_wins
-    outcome = "#{@player_1.name} wins the series!"
-  elsif @player_2.current_wins > @player_1.current_wins
-    outcome = "#{@player_2.name} wins the series!"
+  def report_series_winner(game)
+    outcome = ''
+    if @player_1.current_wins > @player_2.current_wins
+      outcome = "#{@player_1.name} wins the series!"
+    elsif @player_2.current_wins > @player_1.current_wins
+      outcome = "#{@player_2.name} wins the series!"
+    end
+    outcome
   end
-  outcome
-end

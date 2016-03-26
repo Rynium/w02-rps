@@ -3,12 +3,13 @@ require_relative 'rock_paper_scissors.rb'
 
 
 class Player
-  attr_accessor :name, :current_move, :current_wins
+  attr_accessor :name, :current_move, :current_wins, :game
 
   def initialize(name)
     @name = name
     @current_move = ''
     @current_wins = 0
+    @game = ''
   end
 
   #Increase the amount of wins for the current player by 1.

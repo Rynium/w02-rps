@@ -54,26 +54,42 @@ class RockPaperScissorsTest < Minitest::Test
 
   def test_return_winner_rock_scissors
     game = Game.new
-    actual = game.return_winner("rock", 'scissors')
+    game.set_player_1(Player.new("Ryan"))
+    game.set_player_2(Player.new("Don"))
+    game.player_1.current_move = "rock"
+    game.player_2.current_move = "scissors"
+    actual = game.return_winner
     assert_equal(1, actual, "'1' as an integer should be returned.")
   end
 
-  def test_return_winnerscissors_rock
+  def test_return_winner_scissors_rock
     game = Game.new
-    actual = game.return_winner('scissors', 'rock')
+    game.set_player_1(Player.new("Ryan"))
+    game.set_player_2(Player.new("Don"))
+    game.player_1.current_move = "scissors"
+    game.player_2.current_move = "rock"
+    actual = game.return_winner
     assert_equal(2, actual, "'2' as an integer should be returned.")
   end
 
   def test_return_winner_scissors_scissors
     game = Game.new
-    actual = game.return_winner("scissors", "scissors")
+    game.set_player_1(Player.new("Ryan"))
+    game.set_player_2(Player.new("Don"))
+    game.player_1.current_move = "scissors"
+    game.player_2.current_move = "scissors"
+    actual = game.return_winner
     assert_equal(3, actual, "'3' as an integer should be returned.")
   end
 
     def test_return_winner_paper_scissors
       game = Game.new
-      actual = game.return_winner("paper", "scissors")
-      assert_equal(2, actual, "'2' as a string should be returned.")
+      game.set_player_1(Player.new("Ryan"))
+      game.set_player_2(Player.new("Don"))
+      game.player_1.current_move = "paper"
+      game.player_2.current_move = "scissors"
+      actual = game.return_winner
+      assert_equal(2, actual, "'2' as an integer should be returned.")
     end
 
     def test_log_round
@@ -100,45 +116,48 @@ class RockPaperScissorsTest < Minitest::Test
       assert_equal('Bob', actual, "'Bob' as a string should be returned.")
     end
 
-    def test_winner_player_Don_beats_Ryan
+    def test_report_round_winner_p1_paper_rock
       game = Game.new
-      game.series_length = 9
-
       game.set_player_1(Player.new("Ryan"))
-      game.player_1.current_wins = 4
-
       game.set_player_2(Player.new("Don"))
-      game.player_2.current_wins = 5
-
-      actual = game.clinched_series
-      assert_equal(true, actual, "'true' as an boolean should be returned.")
+      game.current_round = 7
+      game.player_1.current_move = 'paper'
+      game.player_2.current_move = 'rock'
+      actual = game.report_round_winner(1)
+      expected = "ROUND 7---Ryan's PAPER beats Don's ROCK"
+      assert_equal(expected, actual, "'#{expected}' as an integer should be returned.")
     end
 
-    def test_winner_player_Ryan_beats_Don
+    def test_refute_clinched_series
       game = Game.new
+      game.set_player_1(Player.new("Ryan"))
+      game.set_player_2(Player.new("Don"))
+      game.series_length = 7
+      game.player_1.current_wins= 3
+      game.player_2.current_wins= 3
+      actual = game.clinched_series?
+      refute_equal(true, actual, "'false' as a boolean should be returned.")
+    end
+
+    def test_assert_clinched_series_7
+      game = Game.new
+      game.set_player_1(Player.new("Ryan"))
+      game.set_player_2(Player.new("Don"))
+      game.series_length = 7
+      game.player_1.current_wins= 4
+      game.player_2.current_wins= 3
+      actual = game.clinched_series?
+      assert_equal(true, actual, "'true' as a boolean should be returned.")
+    end
+
+    def test_assert_clinched_series_11
+      game = Game.new
+      game.set_player_1(Player.new("Ryan"))
+      game.set_player_2(Player.new("Don"))
       game.series_length = 11
-
-      game.set_player_1(Player.new("Ryan"))
-      game.player_1.current_wins = 6
-
-      game.set_player_2(Player.new("Don"))
-      game.player_2.current_wins = 2
-
-      actual = game.clinched_series
-      assert_equal(true, actual, "'true' as an boolean should be returned.")
-    end
-
-    def test_report_winner_p1_paper_rock
-      game = Game.new
-      actual = game.report_winner(1, "Ryan", "paper", "Jay", "rock", 7)
-      expected = "ROUND 7---Ryan's PAPER beats Jay's ROCK"
-      assert_equal(expected, actual, "'#{expected}' as an integer should be returned.")
-    end
-
-    def test_report_winner_p2_scissors_paper
-      game = Game.new
-      actual = game.report_winner(2, "Ryan", "paper", "Jay", "scissors", 7)
-      expected = "ROUND 7---Jay's SCISSORS beats Ryan's PAPER"
-      assert_equal(expected, actual, "'#{expected}' as an integer should be returned.")
+      game.player_1.current_wins= 6
+      game.player_2.current_wins= 1
+      actual = game.clinched_series?
+      assert_equal(true, actual, "'true' as a boolean should be returned.")
     end
 end

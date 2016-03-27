@@ -15,37 +15,9 @@ class Game
   #Tests if a move is valid.
   #Takes move a string as input.
   #Outputs true if the string is 'rock','paper', or 'scissors'
-    def valid_move?(move)
+  def valid_move?(move)
     valid = ['rock', 'paper', 'scissors']
     valid.include? move.downcase
-  end
-
-  #Determines which player wins the match.
-  #Takes in two valid moves as strings
-  #Returns a string drescribing the outcome of the match.
-  def return_winner
-    winner = ''
-      if player_1.current_move.downcase == 'rock'     && player_2.current_move.downcase == 'scissors' ||
-        player_1.current_move.downcase == 'scissors'  && player_2.current_move.downcase == 'paper' ||
-        player_1.current_move.downcase == 'paper'     && player_2.current_move.downcase == 'rock'
-        winner = 1
-
-      elsif player_2.current_move.downcase == 'rock'  && player_1.current_move.downcase == 'scissors' ||
-        player_2.current_move.downcase == 'scissors'  && player_1.current_move.downcase == 'paper' ||
-        player_2.current_move.downcase == 'paper'     && player_1.current_move.downcase == 'rock'
-        winner = 2
-      else
-        winner = 3
-      end
-  end
-
-  def report_round_winner(result)
-    report = ''
-      if result == 1
-        report = "ROUND #{@current_round}---#{@player_1.name}'s #{@player_1.current_move.upcase} beats #{@player_2.name}'s #{@player_2.move.upcase}"
-      elsif result == 2
-        report = "ROUND #{@current_round}---#{@player_2.name}'s #{@player_2.current_move.upcase} beats #{@player_1.name}'s #{@player_1.move.upcase}"
-      end
   end
 
   #Logs a battle round in to the game_log
@@ -71,6 +43,14 @@ class Game
     player_2.game = self
   end
 
+  def route_win_increase(result)
+    result == 1 ? @player_1.increase_current_wins : @player_2.increase_current_wins
+  end
+
+  def increase_current_round
+    @current_round += 1
+  end
+  
   #Checks to see if a player has clinched a series win.
   #Takes in 3 arguements - player_1.currnet_wins, player_2.currnet_wins, and series_length
   #Returns a string drescribing a player as a winner if player.current_wins > series_length/2
@@ -79,6 +59,40 @@ class Game
     @player_1.current_wins > (clinch_num) || @player_2.current_wins > (clinch_num) ? winner = true : winner = false
   end
 
+  #Determines which player wins the match.
+  #Takes in two valid moves as strings
+  #Returns a string drescribing the outcome of the match.
+  def return_winner
+    winner = ''
+      if player_1.current_move.downcase == 'rock'     && player_2.current_move.downcase == 'scissors' ||
+        player_1.current_move.downcase == 'scissors'  && player_2.current_move.downcase == 'paper' ||
+        player_1.current_move.downcase == 'paper'     && player_2.current_move.downcase == 'rock'
+        winner = 1
+
+      elsif player_2.current_move.downcase == 'rock'  && player_1.current_move.downcase == 'scissors' ||
+        player_2.current_move.downcase == 'scissors'  && player_1.current_move.downcase == 'paper' ||
+        player_2.current_move.downcase == 'paper'     && player_1.current_move.downcase == 'rock'
+        winner = 2
+      else
+        winner = 3
+      end
+  end
+
+#Reports the result of an individual round
+#Takes in a non-tie result integer (1 or 2)
+#Returns a sting while pulling player.name and player.current_move attributes from the game.players.
+  def report_round_winner(result)
+    report = ''
+    if result == 1
+      report = "ROUND #{@current_round}---#{@player_1.name}'s #{@player_1.current_move.upcase} beats #{@player_2.name}'s #{@player_2.current_move.upcase}"
+    elsif result == 2
+      report = "ROUND #{@current_round}---#{@player_2.name}'s #{@player_2.current_move.upcase} beats #{@player_1.name}'s #{@player_1.current_move.upcase}"
+    end
+  end
+
+#Reports the outcome of the series
+#Takes in a game object as input. Checks to see if player.current_wins is greater than half the series length.
+#Returns a string description of the outcome if there is one.
   def report_series_winner(game)
     outcome = ''
     if @player_1.current_wins > @player_2.current_wins
@@ -88,3 +102,4 @@ class Game
     end
     outcome
   end
+end

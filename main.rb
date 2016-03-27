@@ -2,17 +2,6 @@ require 'pry'
 require_relative 'lib/rock_paper_scissors.rb'
 require_relative 'lib/player.rb'
 
-
-def get_move(player,game)
-  puts "\n#{player}, what is your weapon of choice?\n"
-  move = gets.chomp
-  while !game.valid_move?(move)
-    puts "\n#{player}, what is your VALID weapon of choice?\n"
-    move = gets.chomp
-  end
-  move
-end
-
 def get_name(player)
   puts "\n#{player}, what is your battle name?\n"
   name = gets.chomp
@@ -33,13 +22,24 @@ def get_series_length
   rounds
 end
 
+def get_move(player,game)
+  puts "\n#{player}, what is your weapon of choice?\n"
+  move = gets.chomp
+  while !game.valid_move?(move)
+    puts "\n#{player}, what is your VALID weapon of choice?\n"
+    move = gets.chomp
+  end
+  move
+end
+
 def current_moves(p1,p2,game)
   p1.current_move = get_move(p1.name, game)
   p2.current_move = get_move(p2.name, game)
-  result = game.return_winner(p1.current_move, p2.current_move)
-  puts "This round is a tie...let's reshoot until we have a winner!" if result == 3
+  result = game.return_winner
+  puts "Tie...let's reshoot until we have a winner!" if result == 3
   result
 end
+
 
 def generate_non_tie(p1,p2,game)
   result = current_moves(p1,p2,game)
@@ -53,15 +53,18 @@ print "\n\nWELCOME TO THE WORLD SERIES OF ROCK,PAPER,SCISSORS on ESPN 8 'THE OCH
 game = Game.new
 p1 = Player.new(get_name("Player 1"))
 p2 = Player.new(get_name("Player 2"))
-n = 1
-round = get_series_length
+game.current_round = 1
+game.series_length = get_series_length
 game.set_player_1(p1)
 game.set_player_2(p2)
 
-while n <= round && !game.clinched_series
-  puts "\n\n#{game.player_1.name}(#{p1.current_wins}) vs #{game.player_2.name}(#{p2.current_wins})\nRound #{n} of #{round}\n"
+while !game.clinched_series?
+  puts "\n\n#{game.player_1.name}(#{p1.current_wins}) vs #{game.player_2.name}(#{p2.current_wins})\nRound #{game.current_round} of #{game.series_length}\n"
   result = generate_non_tie(p1,p2, game)
-
-
-  n += 1
+  report = game.report_round_winner(result)
+  game.route_win_increase(result)
+  game.log_new_round(report)
+  game.game_log.each {|x| puts x}
+  game.increase_current_round
 end
+puts game.report_series_winner(game)
